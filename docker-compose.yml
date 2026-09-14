@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: scamshield-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scamshield}
+      POSTGRES_USER: ${POSTGRES_USER:-scamshield}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-only-change-me}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - scamshield-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scamshield} -d ${POSTGRES_DB:-scamshield}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  scamshield-postgres-data:
