@@ -17,6 +17,43 @@ ScamShield is a hackathon MVP for helping users verify suspicious mobile-money c
 
 Run tests with `mvn test`. Stop the database with `docker compose down`; add `-v` only when you also want to remove the local database volume.
 
+## Team ownership
+
+- Tetlanyo-dev: database, dashboard integration, and integration checks.
+- Thabang-Tsimakwane: backend contract, risk scoring, incidents, and safeguards.
+- loratopoliten: USSD simulator and final demo.
+- kaelowadingalo1-sys: dashboard shell and USSD API integration.
+- Vitore-dev: provider verification, reports, and incident UI.
+
+## API agreement
+
+- Local base URL: `http://localhost:8080`
+- JSON API prefix: `/api`
+- Normalize phone numbers to the agreed Botswana format before lookup or persistence.
+- Use uppercase `SCREAMING_SNAKE_CASE` enum values.
+- Return HTTP `400` validation errors as JSON with `timestamp`, `status`, `error`, `message`, and `path`.
+- Protect admin actions with authentication and return HTTP `401` or `403` when access is denied.
+
+Core endpoints:
+
+```text
+GET  /api/providers
+GET  /api/providers/{id}/official-numbers
+GET  /api/verification/{phoneNumber}
+POST /api/reports
+GET  /api/reports
+GET  /api/risk/{phoneNumber}
+GET  /api/incidents
+GET  /api/incidents/{id}
+POST /api/incidents/{id}/escalate
+```
+
+Reports use `phoneNumber`, `claimedProvider`, `attackType`, `occurredAt`, and an optional `description`. Responses include verification status, risk score, risk level, report count, and explainable reasons where applicable.
+
+## Branch and review workflow
+
+Develop each issue on its own `feature/issue-<number>-<short-name>` branch. Do not commit directly to `main`. Open a pull request after the issue acceptance checks pass, get at least one teammate review, and merge only after approval and a clean test run.
+
 ## Project layout
 
 ```text
@@ -39,8 +76,8 @@ src/
 scripts/                  # developer and demo helper scripts
 ```
 
-Keep module internals inside their domain package. Add database changes as ordered Flyway migrations. Provider numbers in local seed/demo data must be clearly marked as mock until independently verified. Number reputation is a risk signal and does not prove who placed a call.
+Keep module internals inside their domain package. Add database changes as ordered Flyway migrations. Provider numbers in local seed/demo data must be clearly marked as mock until independently verified. Number reputation is a risk signal and does not prove who placed a call. Never request or store PINs, OTPs, passwords, or account credentials.
 
 ## Risk scoring
 
-Implement the weights and thresholds in `design.md`. Keep scores explainable by returning the reasons that contributed to the result; never request or store a user's PIN or OTP.
+Implement the weights and thresholds in `design.md`, returning the reasons behind every score. Risk scores support review; they do not prove identity or automatically block a number.
