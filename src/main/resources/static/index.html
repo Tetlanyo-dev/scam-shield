@@ -3,13 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScamShield</title>
+  <meta name="description" content="ScamShield mobile-money scam verification simulator">
+  <title>ScamShield | USSD simulator</title>
+  <link rel="stylesheet" href="/css/ussd.css">
 </head>
 <body>
-  <main>
-    <h1>ScamShield</h1>
-    <p>Project scaffold is running. The USSD simulator and security dashboard will be added here.</p>
-    <p><a href="/api/health">Check API health</a></p>
+  <main class="app-shell">
+    <section class="intro-panel" aria-labelledby="page-title">
+      <p class="eyebrow">Mobile-money safety desk</p>
+      <h1 id="page-title">ScamShield</h1>
+      <p class="intro-copy">Check a suspicious caller, report what happened, and get clear next steps before you share anything.</p>
+      <div class="trust-note">
+        <span class="trust-icon" aria-hidden="true">!</span>
+        <p>ScamShield will never ask for your PIN, OTP, password, or account credentials.</p>
+      </div>
+    </section>
+
+    <section class="simulator-card" aria-labelledby="simulator-title">
+      <div class="simulator-header">
+        <div>
+          <p class="eyebrow">Interactive demo</p>
+          <h2 id="simulator-title">USSD simulator</h2>
+        </div>
+        <span class="status-pill"><span class="status-dot"></span>Ready</span>
+      </div>
+
+      <div id="conversation" class="conversation" aria-live="polite" aria-label="USSD conversation"></div>
+
+      <form id="ussd-form" class="input-row" novalidate>
+        <label for="ussd-input" class="sr-only">Your response</label>
+        <input id="ussd-input" name="response" type="text" inputmode="text" autocomplete="off" placeholder="Choose an option" maxlength="80">
+        <button type="submit" class="primary-button">Send <span aria-hidden="true">→</span></button>
+      </form>
+
+      <div class="simulator-actions">
+        <button id="back-button" type="button" class="text-button">← Back</button>
+        <button id="restart-button" type="button" class="text-button">Restart session</button>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Demo environment</span>
+      <a href="/api/health">System status</a>
+    </footer>
   </main>
+  <script src="/js/ussd.js" defer></script>
 </body>
 </html>
