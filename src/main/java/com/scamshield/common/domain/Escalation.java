@@ -1,0 +1,2 @@
+package com.scamshield.common.domain; import jakarta.persistence.*; import java.time.LocalDateTime;
+@Entity @Table(name="escalations") public class Escalation { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) public Long id; @Column(name="incident_id",nullable=false) public Long incidentId; public String destination; @Column(name="external_reference") public String externalReference; public String status; @Column(name="created_at") public LocalDateTime createdAt; }

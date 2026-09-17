@@ -389,30 +389,6 @@ Cover the highest-value MVP safeguards without expanding into production infrast
 **Owner:** Person E. **Contributors:** all five.  
 **Depends on:** #1–#14 as applicable.
 
-### Goal
+#
 
-Prove the MVP works from a clean start and prepare a concise, repeatable demo.
-
-### Demo sequence
-
-1. Start the database and application using README instructions.
-2. In the USSD simulator, verify a suspicious mock number and show its risk reasons and safe advice.
-3. Submit an OTP-request scam report; show confirmation and the increased risk score.
-4. Show the corresponding incident and supporting reports in the dashboard.
-5. Trigger mock escalation and show the queued destination/reference.
-
-### Tasks
-
-- Run the full sequence from a clean database reset/reseed.
-- Check the score calculation against the exact issue #8 test cases and demo data.
-- Fix only demo-blocking defects after the feature freeze; record lower-priority issues for follow-up.
-- Prepare a short ownership-aware presentation: problem, user flow, explainable scoring, incident response, prototype limitations.
-- Rehearse once with each person covering their contribution and likely judge questions.
-
-### Acceptance criteria
-
-- The sequence completes reliably from documented commands.
-- No real provider integration or automatic number blocking is implied.
-- Known limitations and any non-blocking bugs are recorded.
-- The demo can be delivered within the team's allotted time.
 
