@@ -1,0 +1,17 @@
+package com.scamshield.reporting;
+import com.scamshield.common.domain.*; import com.scamshield.common.repo.*; import com.scamshield.risk.RiskScoringService; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.time.*; import java.util.*;
+@Service public class ReportService {
+ static final Map<String,Long> RATE=new java.util.concurrent.ConcurrentHashMap<>();
+ final ReportRepository reports; final PhoneRiskRepository risks; final IncidentRepository incidents; final RiskScoringService scorer;
+ public ReportService(ReportRepository r,PhoneRiskRepository p,IncidentRepository i,RiskScoringService s){reports=r;risks=p;incidents=i;scorer=s;}
+ private String normalize(String raw){ if(raw==null) throw new IllegalArgumentException("Phone number is required"); String p=raw.replaceAll("[\\s-]",""); if(p.matches("^7[0-9]{7}$")) p="+267"+p; if(!p.matches("\\+267[0-9]{8}")) throw new IllegalArgumentException("Valid Botswana phone number required (e.g. +26771111111)"); return p; }
+ @Transactional public Map<String,Object> create(String raw,String provider,String attack,String description,String reporter){
+   String rateKey=reporter==null||reporter.isBlank()?"anonymous":reporter; long now=System.currentTimeMillis(); long prior=RATE.getOrDefault(rateKey,0L); if(now-prior<1000) throw new IllegalArgumentException("Please wait before submitting another report"); RATE.put(rateKey,now);
+   String phone=normalize(raw); if(provider==null||!List.of("Orange","Mascom","BTC","Other").contains(provider)) throw new IllegalArgumentException("Invalid provider"); if(attack==null||!List.of("PIN","OTP","MONEY","OTHER").contains(attack)) throw new IllegalArgumentException("Invalid attack type"); if(description!=null&&description.length()>500) throw new IllegalArgumentException("Description must be 500 characters or fewer"); if(description!=null&&description.matches("(?i).*(pin|otp|password)\\s*[:=].*")) throw new IllegalArgumentException("Do not submit PINs, OTPs, or passwords");
+   Report x=new Report(); x.phoneNumber=phone; x.claimedProvider=provider; x.attackType=attack; x.description=description; x.reporterKey=(reporter==null||reporter.isBlank()?"anonymous-"+UUID.randomUUID():reporter); x.createdAt=LocalDateTime.now(); reports.save(x);
+   var all=reports.findByPhoneNumber(phone); var result=scorer.score(all.stream().map(a->new RiskScoringService.Signal(a.claimedProvider,a.attackType,a.reporterKey)).toList()); PhoneRisk pr=risks.findById(phone).orElseGet(PhoneRisk::new); pr.phoneNumber=phone;pr.score=result.score();pr.level=result.level();pr.reasons=String.join("; ",result.reasons());pr.reportCount=all.size();pr.updatedAt=LocalDateTime.now();risks.save(pr);
+   if(result.score()>=60){var in=incidents.findByPhoneNumberAndStatusNot(phone,"RESOLVED").orElseGet(()->{Incident z=new Incident();z.reference="SC-"+String.format("%03d",incidents.count()+1);z.phoneNumber=phone;z.status="OPEN";z.createdAt=LocalDateTime.now();return z;});in.riskScore=result.score();in.reportCount=all.size();in.updatedAt=LocalDateTime.now();incidents.save(in);}
+   return new LinkedHashMap<>(Map.of("reportId",x.id,"phoneNumber",phone,"riskScore",result.score(),"level",result.level(),"reasons",result.reasons(),"message","Report received. Thank you for helping protect the community."));
+ }
+ public List<Report> recent(){return reports.findTop20ByOrderByCreatedAtDesc();}
+}

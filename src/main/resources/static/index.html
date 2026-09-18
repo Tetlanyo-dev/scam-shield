@@ -1,15 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ScamShield</title>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ScamShield | Security Dashboard</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f6f9;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{height:68px;background:#f58220;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100% - 1180px)/2));box-shadow:0 2px 10px #17203318}.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.nav{display:flex;gap:8px}.nav a{color:#fff;text-decoration:none;padding:9px 13px;border-radius:8px;font-weight:600}.nav a.active,.nav a:hover{background:#ffffff2e}main{max-width:1180px;margin:34px auto;padding:0 22px}.heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}h1{font-size:28px;margin:0}p.sub{margin:5px 0 0;color:#667085}.tag{font-size:12px;font-weight:700;letter-spacing:.06em;color:#9a4c00;background:#fff2e5;border-radius:20px;padding:7px 11px}.button{border:0;border-radius:8px;background:#f58220;color:white;font-weight:700;padding:10px 15px;cursor:pointer}.button:hover{background:#dc6e12}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.card,section{background:#fff;border:1px solid #e7eaf0;border-radius:12px;box-shadow:0 3px 12px #192b4410}.metric-card{padding:18px}.metric-card span{display:block;color:#697586;font-size:13px}.metric{font-size:30px;font-weight:750;margin-top:8px}.section{padding:20px;margin-bottom:18px}.section h2{font-size:17px;margin:0 0 16px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:700px}th{text-align:left;color:#667085;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:#fafbfc}td,th{padding:12px 10px;border-bottom:1px solid #eef0f3}td{font-size:14px}.pill{font-size:12px;font-weight:700;border-radius:20px;padding:5px 9px;background:#eef2f6}.pill.CRITICAL{color:#a81f2d;background:#ffebed}.pill.HIGH{color:#a94d00;background:#fff1e5}.pill.SUSPICIOUS{color:#815900;background:#fff8dc}.muted{color:#768196}.small-button{border:1px solid #f58220;color:#bc5d0b;background:white;border-radius:7px;padding:7px 10px;font-weight:700;cursor:pointer}.small-button:hover{background:#fff5eb}.error{color:#a81f2d;background:#fff0f0;padding:14px;border-radius:8px}.reports{display:grid;gap:8px}.report{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #eef0f3;font-size:14px}.report:last-child{border:0}.report strong{display:block}.detail{margin-top:7px;color:#697586;font-size:13px}
+    @media(max-width:760px){header{padding:0 16px}.metrics{grid-template-columns:repeat(2,1fr)}main{margin:24px auto;padding:0 14px}.heading{align-items:flex-start;flex-direction:column}.report{display:block}.tag{align-self:flex-start}}
+  </style>
 </head>
 <body>
-  <main>
-    <h1>ScamShield</h1>
-    <p>Project scaffold is running. The USSD simulator and security dashboard will be added here.</p>
-    <p><a href="/api/health">Check API health</a></p>
-  </main>
-</body>
-</html>
+<header><a class="brand" href="/" style="color:inherit;text-decoration:none">ScamShield</a><nav class="nav" aria-label="Main navigation"><a class="active" href="/">Security dashboard</a><a href="/ussd.html">USSD simulator</a></nav></header>
+<main>
+  <div class="heading"><div><h1>Security dashboard</h1><p class="sub">Review current reports, risk signals, and incidents.</p></div><span class="tag">DEMO · MOCK PROVIDER DATA</span></div>
+  <div class="metrics" id="metrics"><div class="card metric-card">Loading dashboard…</div></div>
+  <section class="section"><h2>Incidents</h2><div class="table-wrap"><table><thead><tr><th>Incident</th><th>Phone number</th><th>Risk</th><th>Reports</th><th>Status</th><th>Action</th></tr></thead><tbody id="incidents"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody></table></div></section>
+  <section class="section"><h2>Recent reports</h2><div id="reports" class="reports"><span class="muted">Loading…</span></div></section>
+</main>
+<script>
+const ADMIN_KEY='demo-admin-key';
+async function api(url,options={}){const response=await fetch(url,{...options,headers:{...(options.headers||{}),'X-Admin-Key':ADMIN_KEY}});const data=await response.json();if(!response.ok)throw Error(data.error?.message||'Request failed');return data}
+async function load(){const metrics=document.querySelector('#metrics'),body=document.querySelector('#incidents'),reports=document.querySelector('#reports');try{const d=await api('/api/admin/dashboard');metrics.innerHTML=[['Active incidents',d.activeIncidents],['Reports today',d.reportsToday],['High-risk numbers',d.highRiskNumbers],['Critical numbers',d.criticalNumbers]].map(([label,value])=>`<div class="card metric-card"><span>${label}</span><div class="metric">${value}</div></div>`).join('');body.innerHTML=d.incidents.length?d.incidents.map(i=>`<tr><td><strong>${i.reference}</strong></td><td>${i.phoneNumber}</td><td><span class="pill ${i.riskScore>=80?'CRITICAL':i.riskScore>=60?'HIGH':'SUSPICIOUS'}">${i.riskScore} · ${i.riskScore>=80?'CRITICAL':i.riskScore>=60?'HIGH':'SUSPICIOUS'}</span></td><td>${i.reportCount}</td><td>${i.status.replaceAll('_',' ')}</td><td>${i.status!=='ESCALATED'?`<button class="small-button" onclick="escalate(${i.id})">Escalate (mock)</button>`:'Queued'}</td></tr>`).join(''):'<tr><td colspan="6" class="muted">No incidents yet.</td></tr>';reports.innerHTML=d.recentReports.length?d.recentReports.map(r=>`<article class="report"><div><strong>${r.phoneNumber} · ${r.attackType.replaceAll('_',' ')}</strong><div class="detail">Claimed ${r.claimedProvider||'unknown'} · ${r.description||'No description provided'}</div></div><time class="muted">${new Date(r.createdAt).toLocaleString()}</time></article>`).join(''):'<span class="muted">No reports yet.</span>'}catch(error){metrics.innerHTML=`<div class="error">Dashboard could not load: ${error.message}</div>`;body.innerHTML='<tr><td colspan="6" class="muted">Unavailable</td></tr>';reports.innerHTML='<span class="muted">Unavailable</span>'}}
+async function escalate(id){try{const result=await api(`/api/incidents/${id}/escalate`,{method:'POST'});alert(`SIMULATED · ${result.status}\n${result.destination}\nReference: ${result.reference}`);load()}catch(error){alert(error.message)}}
+load();
+</script>
+</body></html>

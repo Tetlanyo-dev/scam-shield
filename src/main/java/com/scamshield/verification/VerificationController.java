@@ -1,0 +1,2 @@
+package com.scamshield.verification; import org.springframework.web.bind.annotation.*; import java.util.*;
+@RestController @RequestMapping("/api/verification") public class VerificationController { private final VerificationService service; public VerificationController(VerificationService s){service=s;} @GetMapping("/{phoneNumber}") public Map<String,Object> verify(@PathVariable String phoneNumber){return service.verify(phoneNumber);} }

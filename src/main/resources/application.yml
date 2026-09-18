@@ -4,15 +4,16 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:scamshield}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${POSTGRES_DB:scamshield}
     username: ${POSTGRES_USER:scamshield}
-    password: ${POSTGRES_PASSWORD:local-only-change-me}
+    password: ${POSTGRES_PASSWORD:change-me-for-local-development}
   jpa:
     hibernate:
       ddl-auto: validate
     open-in-view: false
   flyway:
     enabled: true
+    baseline-on-migrate: true
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8081}

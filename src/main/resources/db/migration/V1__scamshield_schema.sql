@@ -1,0 +1,14 @@
+CREATE TABLE providers (id BIGSERIAL PRIMARY KEY, name VARCHAR(80) NOT NULL UNIQUE);
+CREATE TABLE official_numbers (id BIGSERIAL PRIMARY KEY, provider_id BIGINT NOT NULL REFERENCES providers(id), phone_number VARCHAR(30) NOT NULL UNIQUE);
+CREATE TABLE phone_risks (phone_number VARCHAR(30) PRIMARY KEY, score INT NOT NULL, level VARCHAR(20) NOT NULL, reasons TEXT NOT NULL, report_count INT NOT NULL DEFAULT 0, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE reports (id BIGSERIAL PRIMARY KEY, phone_number VARCHAR(30) NOT NULL, claimed_provider VARCHAR(80), attack_type VARCHAR(40) NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE incidents (id BIGSERIAL PRIMARY KEY, reference VARCHAR(30) NOT NULL UNIQUE, phone_number VARCHAR(30) NOT NULL, status VARCHAR(30) NOT NULL, risk_score INT NOT NULL, report_count INT NOT NULL, escalation_reference VARCHAR(40), created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+INSERT INTO providers(name) VALUES ('Orange'),('Mascom'),('BTC');
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26771111111' FROM providers WHERE name='Orange';
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26772222222' FROM providers WHERE name='Mascom';
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26773333333' FROM providers WHERE name='BTC';
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26731111111' FROM providers WHERE name='Orange';
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26732222222' FROM providers WHERE name='Mascom';
+INSERT INTO official_numbers(provider_id, phone_number) SELECT id, '+26733333333' FROM providers WHERE name='BTC';
+INSERT INTO phone_risks(phone_number,score,level,reasons,report_count) VALUES ('+26774444444',89,'CRITICAL','Multiple independent reports; Provider impersonation; OTP request',12),('+26775555555',68,'HIGH','Provider impersonation; PIN request',4),('+26776666666',42,'SUSPICIOUS','Multiple independent reports',2),('+26777777777',31,'SUSPICIOUS','Money request',1),('+26778888888',10,'LOW','Report exists',1);
+INSERT INTO incidents(reference,phone_number,status,risk_score,report_count) VALUES ('SC-001','+26774444444','OPEN',89,12),('SC-002','+26775555555','UNDER_INVESTIGATION',68,4),('SC-003','+26776666666','OPEN',42,2);
