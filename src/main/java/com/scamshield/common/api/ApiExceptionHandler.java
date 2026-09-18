@@ -1,2 +1,34 @@
-package com.scamshield.common.api; import org.springframework.http.*; import org.springframework.web.bind.annotation.*; import java.util.*;
-@RestControllerAdvice public class ApiExceptionHandler { @ExceptionHandler(IllegalArgumentException.class) ResponseEntity<Map<String,Object>> bad(IllegalArgumentException e){return ResponseEntity.badRequest().body(Map.of("error",Map.of("code","BAD_REQUEST","message",e.getMessage())));} @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class) ResponseEntity<Map<String,Object>> status(org.springframework.web.server.ResponseStatusException e){return ResponseEntity.status(e.getStatusCode()).body(Map.of("error",Map.of("code",e.getStatusCode().toString(),"message",e.getReason())));} @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class) ResponseEntity<Map<String,Object>> malformed(){return ResponseEntity.badRequest().body(Map.of("error",Map.of("code","INVALID_JSON","message","Request body must be valid JSON")));} }
+package com.scamshield.common.api;
+
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
+
+@RestControllerAdvice
+public class ApiExceptionHandler {
+  @ExceptionHandler(IllegalArgumentException.class)
+  ResponseEntity<Map<String, Object>> badRequest(IllegalArgumentException exception) {
+    return ResponseEntity.badRequest().body(Map.of(
+        "error",
+        Map.of("code", "BAD_REQUEST", "message", exception.getMessage())));
+  }
+
+  @ExceptionHandler(ResponseStatusException.class)
+  ResponseEntity<Map<String, Object>> status(ResponseStatusException exception) {
+    return ResponseEntity.status(exception.getStatusCode()).body(Map.of(
+        "error",
+        Map.of(
+            "code", exception.getStatusCode().toString(),
+            "message", exception.getReason())));
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  ResponseEntity<Map<String, Object>> malformedJson() {
+    return ResponseEntity.badRequest().body(Map.of(
+        "error",
+        Map.of("code", "INVALID_JSON", "message", "Request body must be valid JSON")));
+  }
+}

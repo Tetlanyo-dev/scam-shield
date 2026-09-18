@@ -1,35 +1,408 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ScamShield | USSD Simulator</title>
   <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f6f9;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{height:68px;background:#f58220;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100% - 1040px)/2));box-shadow:0 2px 10px #17203318}.brand{font-size:20px;font-weight:800}.nav{display:flex;gap:8px}.nav a{color:#fff;text-decoration:none;padding:9px 13px;border-radius:8px;font-weight:600}.nav a.active,.nav a:hover{background:#ffffff2e}main{max-width:1040px;margin:36px auto;padding:0 20px}.intro{margin-bottom:22px}.intro h1{font-size:28px;margin:0}.intro p{color:#667085;margin:6px 0}.layout{display:grid;grid-template-columns:minmax(0,430px) 1fr;gap:24px;align-items:start}.phone{background:#fff;border:1px solid #e7eaf0;border-radius:16px;padding:18px;box-shadow:0 6px 24px #192b4412}.phone-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;font-weight:700}.signal{font-size:12px;color:#218346}.screen{background:#172033;color:#f7f8fb;border-radius:12px;padding:20px;min-height:285px;white-space:pre-wrap;line-height:1.6;font-family:ui-monospace,SFMono-Regular,monospace;font-size:14px;overflow-wrap:anywhere}.form{margin-top:12px}.form label{display:block;font-size:13px;font-weight:700;margin:10px 0 5px}.form input,.form select,.form textarea{width:100%;padding:11px;border:1px solid #ccd3df;border-radius:8px;font:inherit}.form textarea{resize:vertical;min-height:75px}.actions{display:flex;gap:8px;margin-top:12px}.button{border:0;border-radius:8px;background:#f58220;color:#fff;font-weight:700;padding:11px 15px;cursor:pointer}.button:hover{background:#dc6e12}.button.secondary{background:#eef1f5;color:#344054}.menu{display:grid;gap:9px}.menu button{width:100%;text-align:left;background:#fff;color:#233047;border:1px solid #e1e5eb;border-radius:9px;padding:13px;cursor:pointer;font:inherit;font-weight:650}.menu button:hover{border-color:#f58220;background:#fff9f3}.help{background:#fff;border:1px solid #e7eaf0;border-radius:12px;padding:20px;line-height:1.65}.help h2{font-size:18px;margin:0 0 9px}.help p{margin:7px 0;color:#596579}.safe{font-weight:750;color:#a34800!important}.error{color:#a81f2d}.ok{color:#a6f4c5}.tag{display:inline-block;font-size:12px;font-weight:700;color:#9a4c00;background:#fff2e5;border-radius:20px;padding:7px 11px;margin-top:8px}@media(max-width:760px){header{padding:0 16px}.layout{grid-template-columns:1fr}main{margin:24px auto;padding:0 14px}.intro h1{font-size:24px}}
-  </style>
+:root {
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#172033;
+  background:#f4f6f9;
+  font-synthesis:none
+}
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0
+}
+header {
+  height:68px;
+  background:#f58220;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 max(24px,calc((100% - 1040px)/2));
+  box-shadow:0 2px 10px #17203318
+}
+.brand {
+  font-size:20px;
+  font-weight:800
+}
+.nav {
+  display:flex;
+  gap:8px
+}
+.nav a {
+  color:#fff;
+  text-decoration:none;
+  padding:9px 13px;
+  border-radius:8px;
+  font-weight:600
+}
+.nav a.active,.nav a:hover {
+  background:#ffffff2e
+}
+main {
+  max-width:1040px;
+  margin:36px auto;
+  padding:0 20px
+}
+.intro {
+  margin-bottom:22px
+}
+.intro h1 {
+  font-size:28px;
+  margin:0
+}
+.intro p {
+  color:#667085;
+  margin:6px 0
+}
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,430px) 1fr;
+  gap:24px;
+  align-items:start
+}
+.phone {
+  background:#fff;
+  border:1px solid #e7eaf0;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 6px 24px #192b4412
+}
+.phone-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:13px;
+  font-weight:700
+}
+.signal {
+  font-size:12px;
+  color:#218346
+}
+.screen {
+  background:#172033;
+  color:#f7f8fb;
+  border-radius:12px;
+  padding:20px;
+  min-height:285px;
+  white-space:pre-wrap;
+  line-height:1.6;
+  font-family:ui-monospace,SFMono-Regular,monospace;
+  font-size:14px;
+  overflow-wrap:anywhere
+}
+.form {
+  margin-top:12px
+}
+.form label {
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin:10px 0 5px
+}
+.form input,.form select,.form textarea {
+  width:100%;
+  padding:11px;
+  border:1px solid #ccd3df;
+  border-radius:8px;
+  font:inherit
+}
+.form textarea {
+  resize:vertical;
+  min-height:75px
+}
+.actions {
+  display:flex;
+  gap:8px;
+  margin-top:12px
+}
+.button {
+  border:0;
+  border-radius:8px;
+  background:#f58220;
+  color:#fff;
+  font-weight:700;
+  padding:11px 15px;
+  cursor:pointer
+}
+.button:hover {
+  background:#dc6e12
+}
+.button.secondary {
+  background:#eef1f5;
+  color:#344054
+}
+.menu {
+  display:grid;
+  gap:9px
+}
+.menu button {
+  width:100%;
+  text-align:left;
+  background:#fff;
+  color:#233047;
+  border:1px solid #e1e5eb;
+  border-radius:9px;
+  padding:13px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:650
+}
+.menu button:hover {
+  border-color:#f58220;
+  background:#fff9f3
+}
+.help {
+  background:#fff;
+  border:1px solid #e7eaf0;
+  border-radius:12px;
+  padding:20px;
+  line-height:1.65
+}
+.help h2 {
+  font-size:18px;
+  margin:0 0 9px
+}
+.help p {
+  margin:7px 0;
+  color:#596579
+}
+.safe {
+  font-weight:750;
+  color:#a34800!important
+}
+.error {
+  color:#a81f2d
+}
+.ok {
+  color:#a6f4c5
+}
+.tag {
+  display:inline-block;
+  font-size:12px;
+  font-weight:700;
+  color:#9a4c00;
+  background:#fff2e5;
+  border-radius:20px;
+  padding:7px 11px;
+  margin-top:8px
+}
+@media(max-width:760px) {
+  header {
+  padding:0 16px
+}
+.layout {
+  grid-template-columns:1fr
+}
+main {
+  margin:24px auto;
+  padding:0 14px
+}
+.intro h1 {
+  font-size:24px
+}
+
+}
+
+</style>
 </head>
 <body>
-<header><a class="brand" href="/" style="color:inherit;text-decoration:none">ScamShield</a><nav class="nav" aria-label="Main navigation"><a href="/">Security dashboard</a><a class="active" href="/ussd.html">USSD simulator</a></nav></header>
+<header>
+<a class="brand" href="/" style="color:inherit;text-decoration:none">ScamShield</a>
+<nav class="nav" aria-label="Main navigation">
+<a href="/">Security dashboard</a>
+<a class="active" href="/ussd.html">USSD simulator</a>
+</nav>
+</header>
 <main>
-  <div class="intro"><h1>USSD Simulator</h1><p>Try a short-code style flow for caller checks, scam reports, and safety advice.</p><span class="tag">DEMO · MOCK PROVIDER DATA</span></div>
-  <div class="layout"><section class="phone" aria-label="USSD phone simulator"><div class="phone-top"><span>SCAMSHIELD</span><span class="signal">● Connected</span></div><div id="screen" class="screen" aria-live="polite">Welcome to ScamShield
+  <div class="intro">
+<h1>USSD Simulator</h1>
+<p>Try a short-code style flow for caller checks, scam reports, and safety advice.</p>
+<span class="tag">DEMO · MOCK PROVIDER DATA</span>
+</div>
+  <div class="layout">
+<section class="phone" aria-label="USSD phone simulator">
+<div class="phone-top">
+<span>SCAMSHIELD</span>
+<span class="signal">● Connected</span>
+</div>
+<div id="screen" class="screen" aria-live="polite">Welcome to ScamShield
 
 Choose an option:
 1. Verify caller
 2. Report scam
 3. Emergency fraud
-4. Security advice</div><div id="form" class="form"></div><div id="menu" class="menu"><button data-action="verify">1 · Verify a caller</button><button data-action="report">2 · Report a scam</button><button data-action="emergency">3 · Emergency fraud</button><button data-action="advice">4 · Security advice</button></div><div class="actions"><button class="button secondary" id="back" hidden>Back</button><button class="button secondary" id="restart">Restart</button></div></section>
-  <aside class="help"><h2>Stay safe</h2><p class="safe">Never share your PIN, OTP, or password with a caller.</p><p>A number lookup checks ScamShield’s local registry and reports. It does not prove who placed a call.</p><p>If you think your account is at risk, contact your provider through a number you already trust.</p></aside></div>
+4. Security advice</div>
+<div id="form" class="form">
+</div>
+<div id="menu" class="menu">
+<button data-action="verify">1 · Verify a caller</button>
+<button data-action="report">2 · Report a scam</button>
+<button data-action="emergency">3 · Emergency fraud</button>
+<button data-action="advice">4 · Security advice</button>
+</div>
+<div class="actions">
+<button class="button secondary" id="back" hidden>Back</button>
+<button class="button secondary" id="restart">Restart</button>
+</div>
+</section>
+  <aside class="help">
+<h2>Stay safe</h2>
+<p class="safe">Never share your PIN, OTP, or password with a caller.</p>
+<p>A number lookup checks ScamShield’s local registry and reports. It does not prove who placed a call.</p>
+<p>If you think your account is at risk, contact your provider through a number you already trust.</p>
+</aside>
+</div>
 </main>
 <script>
-const screen=document.querySelector('#screen'),form=document.querySelector('#form'),menuElement=document.querySelector('#menu'),back=document.querySelector('#back');let previous='home';
-function showMenu(){form.innerHTML='';screen.textContent='Welcome to ScamShield\n\nChoose an option:\n1. Verify caller\n2. Report scam\n3. Emergency fraud\n4. Security advice';menuElement.hidden=false;back.hidden=true}
-function showForm(kind){previous=kind;menuElement.hidden=true;back.hidden=false;form.innerHTML='';if(kind==='verify'){screen.textContent='VERIFY CALLER\n\nEnter the number that called you.';form.innerHTML='<label for="phone">Phone number</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="+267 7XXXXXXX"><div class="actions"><button class="button" id="check">Check number</button></div>';document.querySelector('#check').onclick=verify}
-if(kind==='report'){screen.textContent='REPORT A SCAM\n\nTell us what happened. Do not enter any PIN or OTP.';form.innerHTML='<label for="phone">Phone number</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="+267 7XXXXXXX"><label for="provider">Who did they claim to represent?</label><select id="provider"><option>Orange</option><option>Mascom</option><option>BTC</option><option>Other</option></select><label for="attack">What did they ask you to do?</label><select id="attack"><option value="OTP">Share an OTP</option><option value="PIN">Share a PIN</option><option value="MONEY">Send money</option><option value="OTHER">Something else</option></select><label for="description">Short description (optional)</label><textarea id="description" maxlength="500" placeholder="Describe the call, without secrets"></textarea><div class="actions"><button class="button" id="submit">Submit report</button></div>';document.querySelector('#submit').onclick=report}
-if(kind==='emergency'){screen.textContent='EMERGENCY FRAUD\n\nIf you shared a secret or sent money, contact your provider and bank immediately using a trusted number. Ask them to secure your account. Never share another OTP or PIN.'}
-if(kind==='advice'){screen.textContent='SECURITY ADVICE\n\nEnd unexpected calls asking for money or account details. Verify through your provider’s official channel. ScamShield will never ask you for a PIN, OTP, or password.'}}
-function busy(message){screen.textContent=message+'\n\nPlease wait…'}
-async function verify(){const phone=document.querySelector('#phone').value.trim();busy('Checking number');try{const response=await fetch('/api/verification/'+encodeURIComponent(phone));const data=await response.json();if(!response.ok)throw Error(data.error?.message||'Could not check that number');screen.textContent=`${data.status==='VERIFIED_PROVIDER_NUMBER'?'VERIFIED REGISTRY NUMBER':data.status.replaceAll('_',' ')}\n\nNumber: ${data.phoneNumber}\n${data.provider?'Provider: '+data.provider+'\n':''}${data.riskScore!==undefined?'Risk: '+data.level+' ('+data.riskScore+'/100)\nReports: '+data.reportCount+'\n':''}${data.reasons?.length?'Reasons: '+data.reasons.join(', ')+'\n':''}\nDo not share your OTP or PIN.`}catch(error){screen.textContent='Could not check this number\n\n'+error.message+'\n\nCheck the number and try again.'}}
-async function report(){const button=document.querySelector('#submit'),payload={phoneNumber:document.querySelector('#phone').value.trim(),claimedProvider:document.querySelector('#provider').value,attackType:document.querySelector('#attack').value,description:document.querySelector('#description').value,reporterKey:'ussd-demo'};button.disabled=true;busy('Sending report');try{const response=await fetch('/api/reports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await response.json();if(!response.ok)throw Error(data.error?.message||'Could not submit report');screen.textContent=`REPORT RECEIVED\n\nThank you for helping protect the community.\nRisk signal: ${data.level} (${data.riskScore}/100)\n\nNever share your OTP or PIN.`;form.innerHTML=''}catch(error){screen.textContent='Report not submitted\n\n'+error.message+'\n\nYou can retry when the connection is available.';button.disabled=false}}
-menuElement.addEventListener('click',e=>{const kind=e.target.closest('button')?.dataset.action;if(kind)showForm(kind)});back.addEventListener('click',showMenu);document.querySelector('#restart').addEventListener('click',showMenu);
+const screen = document.querySelector('#screen');
+const form = document.querySelector('#form');
+const menu = document.querySelector('#menu');
+const back = document.querySelector('#back');
+
+function showMenu() {
+  form.innerHTML = '';
+  screen.textContent = 'Welcome to ScamShield\n\nChoose an option:\n1. Verify caller\n2. Report scam\n3. Emergency fraud\n4. Security advice';
+  menu.hidden = false;
+  back.hidden = true;
+}
+
+function showForm(kind) {
+  menu.hidden = true;
+  back.hidden = false;
+  form.innerHTML = '';
+
+  if (kind === 'verify') {
+    screen.textContent = 'VERIFY CALLER\n\nEnter the number that called you.';
+    form.innerHTML = `
+      <label for="phone">Phone number</label>
+      <input id="phone" inputmode="tel" autocomplete="tel" placeholder="+267 7XXXXXXX">
+      <div class="actions">
+        <button class="button" id="check">Check number</button>
+      </div>`;
+    document.querySelector('#check').addEventListener('click', verify);
+  }
+
+  if (kind === 'report') {
+    screen.textContent = 'REPORT A SCAM\n\nTell us what happened. Do not enter any PIN or OTP.';
+    form.innerHTML = `
+      <label for="phone">Phone number</label>
+      <input id="phone" inputmode="tel" autocomplete="tel" placeholder="+267 7XXXXXXX">
+      <label for="provider">Who did they claim to represent?</label>
+      <select id="provider">
+        <option>Orange</option>
+        <option>Mascom</option>
+        <option>BTC</option>
+        <option>Other</option>
+      </select>
+      <label for="attack">What did they ask you to do?</label>
+      <select id="attack">
+        <option value="OTP">Share an OTP</option>
+        <option value="PIN">Share a PIN</option>
+        <option value="MONEY">Send money</option>
+        <option value="OTHER">Something else</option>
+      </select>
+      <label for="description">Short description (optional)</label>
+      <textarea id="description" maxlength="500" placeholder="Describe the call, without secrets"></textarea>
+      <div class="actions">
+        <button class="button" id="submit">Submit report</button>
+      </div>`;
+    document.querySelector('#submit').addEventListener('click', report);
+  }
+
+  if (kind === 'emergency') {
+    screen.textContent = [
+      'EMERGENCY FRAUD',
+      '',
+      'If you shared a secret or sent money, contact your provider and bank immediately using a trusted number.',
+      'Ask them to secure your account. Never share another OTP or PIN.',
+    ].join('\n');
+  }
+  if (kind === 'advice') {
+    screen.textContent = [
+      'SECURITY ADVICE',
+      '',
+      'End unexpected calls asking for money or account details.',
+      'Verify through your provider’s official channel.',
+      'ScamShield will never ask you for a PIN, OTP, or password.',
+    ].join('\n');
+  }
+}
+
+function busy(message) {
+  screen.textContent = `${message}\n\nPlease wait…`;
+}
+
+async function verify() {
+  const phone = document.querySelector('#phone').value.trim();
+  busy('Checking number');
+  try {
+    const response = await fetch(`/api/verification/${encodeURIComponent(phone)}`);
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error?.message || 'Could not check that number');
+
+    const status = data.status === 'VERIFIED_PROVIDER_NUMBER'
+      ? 'VERIFIED REGISTRY NUMBER'
+      : data.status.replaceAll('_', ' ');
+    const provider = data.provider ? `Provider: ${data.provider}\n` : '';
+    const risk = data.riskScore === undefined
+      ? ''
+      : `Risk: ${data.level} (${data.riskScore}/100)\nReports: ${data.reportCount}\n`;
+    const reasons = data.reasons?.length ? `Reasons: ${data.reasons.join(', ')}\n` : '';
+    screen.textContent = `${status}\n\nNumber: ${data.phoneNumber}\n${provider}${risk}${reasons}\nDo not share your OTP or PIN.`;
+  } catch (error) {
+    screen.textContent = `Could not check this number\n\n${error.message}\n\nCheck the number and try again.`;
+  }
+}
+
+function reporterKey() {
+  let key = sessionStorage.getItem('scamshieldReporterKey');
+  if (!key) {
+    key = `web-${crypto.randomUUID()}`;
+    sessionStorage.setItem('scamshieldReporterKey', key);
+  }
+  return key;
+}
+
+async function report() {
+  const button = document.querySelector('#submit');
+  const payload = {
+    phoneNumber: document.querySelector('#phone').value.trim(),
+    claimedProvider: document.querySelector('#provider').value,
+    attackType: document.querySelector('#attack').value,
+    description: document.querySelector('#description').value,
+    reporterKey: reporterKey(),
+  };
+  button.disabled = true;
+  busy('Sending report');
+  try {
+    const response = await fetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error?.message || 'Could not submit report');
+    screen.textContent = `REPORT RECEIVED\n\nThank you for helping protect the community.\nRisk signal: ${data.level} (${data.riskScore}/100)\n\nNever share your OTP or PIN.`;
+    form.innerHTML = '';
+  } catch (error) {
+    screen.textContent = `Report not submitted\n\n${error.message}\n\nYou can retry when the connection is available.`;
+    button.disabled = false;
+  }
+}
+
+menu.addEventListener('click', (event) => {
+  const kind = event.target.closest('button')?.dataset.action;
+  if (kind) showForm(kind);
+});
+back.addEventListener('click', showMenu);
+document.querySelector('#restart').addEventListener('click', showMenu);
 </script>
-</body></html>
+</body>
+</html>

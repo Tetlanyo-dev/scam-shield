@@ -1,26 +1,721 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ScamShield | Security Dashboard</title>
-  <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f6f9;font-synthesis:none}*{box-sizing:border-box}body{margin:0}header{height:68px;background:#f58220;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100% - 1180px)/2));box-shadow:0 2px 10px #17203318}.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.nav{display:flex;gap:8px}.nav a{color:#fff;text-decoration:none;padding:9px 13px;border-radius:8px;font-weight:600}.nav a.active,.nav a:hover{background:#ffffff2e}main{max-width:1180px;margin:34px auto;padding:0 22px}.heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}h1{font-size:28px;margin:0}p.sub{margin:5px 0 0;color:#667085}.tag{font-size:12px;font-weight:700;letter-spacing:.06em;color:#9a4c00;background:#fff2e5;border-radius:20px;padding:7px 11px}.button{border:0;border-radius:8px;background:#f58220;color:white;font-weight:700;padding:10px 15px;cursor:pointer}.button:hover{background:#dc6e12}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.card,section{background:#fff;border:1px solid #e7eaf0;border-radius:12px;box-shadow:0 3px 12px #192b4410}.metric-card{padding:18px}.metric-card span{display:block;color:#697586;font-size:13px}.metric{font-size:30px;font-weight:750;margin-top:8px}.section{padding:20px;margin-bottom:18px}.section h2{font-size:17px;margin:0 0 16px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:700px}th{text-align:left;color:#667085;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:#fafbfc}td,th{padding:12px 10px;border-bottom:1px solid #eef0f3}td{font-size:14px}.pill{font-size:12px;font-weight:700;border-radius:20px;padding:5px 9px;background:#eef2f6}.pill.CRITICAL{color:#a81f2d;background:#ffebed}.pill.HIGH{color:#a94d00;background:#fff1e5}.pill.SUSPICIOUS{color:#815900;background:#fff8dc}.muted{color:#768196}.small-button{border:1px solid #f58220;color:#bc5d0b;background:white;border-radius:7px;padding:7px 10px;font-weight:700;cursor:pointer}.small-button:hover{background:#fff5eb}.error{color:#a81f2d;background:#fff0f0;padding:14px;border-radius:8px}.reports{display:grid;gap:8px}.report{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #eef0f3;font-size:14px}.report:last-child{border:0}.report strong{display:block}.detail{margin-top:7px;color:#697586;font-size:13px}
-    @media(max-width:760px){header{padding:0 16px}.metrics{grid-template-columns:repeat(2,1fr)}main{margin:24px auto;padding:0 14px}.heading{align-items:flex-start;flex-direction:column}.report{display:block}.tag{align-self:flex-start}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScamShield | Security Dashboard</title>
+<style>
+:root {
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#172033;
+  background:#f4f6f9;
+  font-synthesis:none
+}
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0
+}
+header {
+  height:68px;
+  background:#f58220;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 max(24px,calc((100% - 1240px)/2));
+  box-shadow:0 2px 10px #17203318
+}
+.brand {
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:.2px;
+  color:inherit;
+  text-decoration:none
+}
+.nav {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap
+}
+.nav a {
+  color:#fff;
+  text-decoration:none;
+  padding:9px 11px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:14px
+}
+.nav a.active,.nav a:hover {
+  background:#ffffff2e
+}
+main {
+  max-width:1240px;
+  margin:32px auto;
+  padding:0 22px
+}
+.heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:20px
+}
+h1 {
+  font-size:27px;
+  margin:0
+}
+p.sub {
+  margin:5px 0 0;
+  color:#667085
+}
+.tag {
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  color:#9a4c00;
+  background:#fff2e5;
+  border-radius:20px;
+  padding:7px 11px;
+  white-space:nowrap
+}
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px;
+  margin-bottom:18px
+}
+.card,section {
+  background:#fff;
+  border:1px solid #e7eaf0;
+  border-radius:12px;
+  box-shadow:0 3px 12px #192b4410
+}
+.metric-card {
+  padding:16px
+}
+.metric-card span {
+  display:block;
+  color:#697586;
+  font-size:13px
+}
+.metric {
+  font-size:29px;
+  font-weight:750;
+  margin-top:7px
+}
+.section {
+  padding:19px;
+  margin-bottom:17px
+}
+.section h2 {
+  font-size:17px;
+  margin:0 0 14px
+}
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px
+}
+.section-head h2 {
+  margin:0
+}
+.table-wrap {
+  overflow-x:auto
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:720px
+}
+th {
+  text-align:left;
+  color:#667085;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  background:#fafbfc
+}
+td,th {
+  padding:10px;
+  border-bottom:1px solid #eef0f3
+}
+td {
+  font-size:13px
+}
+.pill {
+  font-size:11px;
+  font-weight:700;
+  border-radius:20px;
+  padding:5px 8px;
+  background:#eef2f6
+}
+.pill.CRITICAL {
+  color:#a81f2d;
+  background:#ffebed
+}
+.pill.HIGH {
+  color:#a94d00;
+  background:#fff1e5
+}
+.pill.SUSPICIOUS {
+  color:#815900;
+  background:#fff8dc
+}
+.muted {
+  color:#768196
+}
+.small-button,.button {
+  border:1px solid #f58220;
+  color:#bc5d0b;
+  background:white;
+  border-radius:7px;
+  padding:7px 9px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:12px
+}
+.button {
+  background:#f58220;
+  color:white;
+  padding:9px 12px
+}
+.small-button:hover,.button:hover {
+  background:#fff5eb
+}
+.button:hover {
+  background:#dc6e12;
+  color:white
+}
+.error {
+  color:#a81f2d;
+  background:#fff0f0;
+  padding:14px;
+  border-radius:8px
+}
+.reports {
+  display:grid;
+  gap:8px
+}
+.report {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid #eef0f3;
+  font-size:13px
+}
+.report:last-child {
+  border:0
+}
+.report strong {
+  display:block
+}
+.detail {
+  margin-top:5px;
+  color:#697586;
+  font-size:12px
+}
+.filters {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px
+}
+.filters input,.filters select {
+  padding:8px 9px;
+  border:1px solid #ccd3df;
+  border-radius:7px;
+  font:inherit;
+  font-size:13px
+}
+.grid2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px
+}
+.bars {
+  display:grid;
+  gap:9px
+}
+.bar-row {
+  display:grid;
+  grid-template-columns:110px 1fr 34px;
+  align-items:center;
+  gap:8px;
+  font-size:12px
+}
+.bar-track {
+  height:13px;
+  background:#f0f2f5;
+  border-radius:20px;
+  overflow:hidden
+}
+.bar-fill {
+  height:100%;
+  background:#f58220;
+  border-radius:20px;
+  min-width:2px
+}
+.daily {
+  display:flex;
+  align-items:end;
+  gap:8px;
+  height:144px;
+  padding:10px 0
+}
+.day {
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:end;
+  flex-direction:column;
+  height:100%;
+  gap:5px;
+  color:#697586;
+  font-size:10px
+}
+.day-bar {
+  width:min(28px,70%);
+  background:#f58220;
+  border-radius:5px 5px 0 0;
+  min-height:2px
+}
+.audit-list {
+  display:grid;
+  gap:0
+}
+.audit-row {
+  display:grid;
+  grid-template-columns:150px 1fr 1.5fr;
+  gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid #eef0f3;
+  font-size:12px
+}
+.status-select {
+  border:1px solid #d9dee7;
+  border-radius:6px;
+  padding:6px;
+  font-size:12px
+}
+@media(max-width:760px) {
+  header {
+  height:auto;
+  min-height:68px;
+  padding:12px 14px;
+  align-items:flex-start;
+  gap:8px;
+  flex-direction:column
+}
+.metrics {
+  grid-template-columns:repeat(2,1fr)
+}
+main {
+  margin:22px auto;
+  padding:0 13px
+}
+.heading {
+  align-items:flex-start;
+  flex-direction:column
+}
+.report {
+  display:block
+}
+.grid2 {
+  grid-template-columns:1fr
+}
+.audit-row {
+  grid-template-columns:1fr;
+  gap:4px
+}
+
+}
+
+</style>
 </head>
 <body>
-<header><a class="brand" href="/" style="color:inherit;text-decoration:none">ScamShield</a><nav class="nav" aria-label="Main navigation"><a class="active" href="/">Security dashboard</a><a href="/ussd.html">USSD simulator</a></nav></header>
+<header>
+<a class="brand" href="/">ScamShield</a>
+<nav class="nav" aria-label="Main navigation">
+<a class="active" href="/">Security dashboard</a>
+<a href="/ussd.html">USSD simulator</a>
+</nav>
+</header>
 <main>
-  <div class="heading"><div><h1>Security dashboard</h1><p class="sub">Review current reports, risk signals, and incidents.</p></div><span class="tag">DEMO · MOCK PROVIDER DATA</span></div>
-  <div class="metrics" id="metrics"><div class="card metric-card">Loading dashboard…</div></div>
-  <section class="section"><h2>Incidents</h2><div class="table-wrap"><table><thead><tr><th>Incident</th><th>Phone number</th><th>Risk</th><th>Reports</th><th>Status</th><th>Action</th></tr></thead><tbody id="incidents"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody></table></div></section>
-  <section class="section"><h2>Recent reports</h2><div id="reports" class="reports"><span class="muted">Loading…</span></div></section>
+<div class="heading">
+<div>
+<h1>Security dashboard</h1>
+<p class="sub">Reports, explainable risk signals, scam patterns, and incident actions.</p>
+</div>
+<span class="tag">DEMO · MOCK PROVIDER DATA · INTERNAL ACTIONS</span>
+</div>
+<div class="metrics" id="metrics">
+<div class="card metric-card">Loading dashboard…</div>
+</div>
+<section class="section">
+<div class="section-head">
+<h2>Reports over time and attack patterns</h2>
+<span class="muted">Last 7 days · all report history</span>
+</div>
+<div class="grid2">
+<div>
+<h3 class="detail">Daily reports</h3>
+<div id="daily-chart" class="daily muted">Loading…</div>
+</div>
+<div>
+<h3 class="detail">Reported behaviours</h3>
+<div id="attack-chart" class="bars muted">Loading…</div>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<h2>Provider view</h2>
+<select id="provider-select" class="status-select">
+<option>Orange</option>
+<option>Mascom</option>
+<option>BTC</option>
+<option>Other</option>
+</select>
+</div>
+<div id="provider-view" class="muted">Loading provider data…</div>
+</section>
+<section class="section">
+<h2>Incidents</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Incident</th>
+<th>Phone number</th>
+<th>Risk</th>
+<th>Reports</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="incidents">
+<tr>
+<td colspan="6" class="muted">Loading…</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<h2>Report history</h2>
+<span id="history-count" class="muted">
+</span>
+</div>
+<div class="filters">
+<input id="filter-phone" placeholder="Filter phone number">
+<select id="filter-provider">
+<option value="">All providers</option>
+<option>Orange</option>
+<option>Mascom</option>
+<option>BTC</option>
+<option>Other</option>
+</select>
+<select id="filter-channel">
+<option value="">All channels</option>
+<option value="USSD_SIMULATOR">USSD simulator</option>
+</select>
+<button class="button" id="filter-button">Filter reports</button>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Received</th>
+<th>Phone number</th>
+<th>Claimed provider</th>
+<th>Pattern</th>
+<th>Channel</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody id="history">
+<tr>
+<td colspan="6" class="muted">Loading…</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="section">
+<h2>Recent reports</h2>
+<div id="reports" class="reports">
+<span class="muted">Loading…</span>
+</div>
+</section>
+<section class="section">
+<h2>In-app notifications</h2>
+<div id="notifications" class="reports">
+<span class="muted">Loading…</span>
+</div>
+</section>
+<section class="section">
+<div class="section-head">
+<h2>Audit log</h2>
+<button class="small-button" id="refresh-audit">Refresh</button>
+</div>
+<div id="audit-log" class="audit-list">
+<span class="muted">Loading…</span>
+</div>
+</section>
 </main>
 <script>
-const ADMIN_KEY='demo-admin-key';
-async function api(url,options={}){const response=await fetch(url,{...options,headers:{...(options.headers||{}),'X-Admin-Key':ADMIN_KEY}});const data=await response.json();if(!response.ok)throw Error(data.error?.message||'Request failed');return data}
-async function load(){const metrics=document.querySelector('#metrics'),body=document.querySelector('#incidents'),reports=document.querySelector('#reports');try{const d=await api('/api/admin/dashboard');metrics.innerHTML=[['Active incidents',d.activeIncidents],['Reports today',d.reportsToday],['High-risk numbers',d.highRiskNumbers],['Critical numbers',d.criticalNumbers]].map(([label,value])=>`<div class="card metric-card"><span>${label}</span><div class="metric">${value}</div></div>`).join('');body.innerHTML=d.incidents.length?d.incidents.map(i=>`<tr><td><strong>${i.reference}</strong></td><td>${i.phoneNumber}</td><td><span class="pill ${i.riskScore>=80?'CRITICAL':i.riskScore>=60?'HIGH':'SUSPICIOUS'}">${i.riskScore} · ${i.riskScore>=80?'CRITICAL':i.riskScore>=60?'HIGH':'SUSPICIOUS'}</span></td><td>${i.reportCount}</td><td>${i.status.replaceAll('_',' ')}</td><td>${i.status!=='ESCALATED'?`<button class="small-button" onclick="escalate(${i.id})">Escalate (mock)</button>`:'Queued'}</td></tr>`).join(''):'<tr><td colspan="6" class="muted">No incidents yet.</td></tr>';reports.innerHTML=d.recentReports.length?d.recentReports.map(r=>`<article class="report"><div><strong>${r.phoneNumber} · ${r.attackType.replaceAll('_',' ')}</strong><div class="detail">Claimed ${r.claimedProvider||'unknown'} · ${r.description||'No description provided'}</div></div><time class="muted">${new Date(r.createdAt).toLocaleString()}</time></article>`).join(''):'<span class="muted">No reports yet.</span>'}catch(error){metrics.innerHTML=`<div class="error">Dashboard could not load: ${error.message}</div>`;body.innerHTML='<tr><td colspan="6" class="muted">Unavailable</td></tr>';reports.innerHTML='<span class="muted">Unavailable</span>'}}
-async function escalate(id){try{const result=await api(`/api/incidents/${id}/escalate`,{method:'POST'});alert(`SIMULATED · ${result.status}\n${result.destination}\nReference: ${result.reference}`);load()}catch(error){alert(error.message)}}
+const ADMIN_KEY = 'demo-admin-key';
+
+async function api(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      'X-Admin-Key': ADMIN_KEY,
+      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+    },
+  });
+  const data = await response.json();
+  if (!response.ok) throw Error(data.error?.message || 'Request failed');
+  return data;
+}
+
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[character]));
+
+const pretty = (value) => esc(String(value ?? '').replaceAll('_', ' '));
+
+function drawBars(node, entries) {
+  const max = Math.max(1, ...entries.map(([, count]) => count));
+  node.innerHTML = entries.length
+    ? entries.map(([name, count]) => `
+        <div class="bar-row">
+          <span>${pretty(name)}</span>
+          <div class="bar-track">
+<div class="bar-fill" style="width:${Math.max(2, count / max * 100)}%">
+</div>
+</div>
+          <strong>${count}</strong>
+        </div>`).join('')
+    : '<span class="muted">No reports yet.</span>';
+}
+
+async function loadAnalytics() {
+  const analytics = await api('/api/admin/analytics');
+  const daily = document.querySelector('#daily-chart');
+  const max = Math.max(1, ...analytics.dailyReports.map((item) => item.count));
+  daily.innerHTML = analytics.dailyReports.map((item) => `
+    <div class="day">
+      <strong>${item.count}</strong>
+      <div class="day-bar" style="height:${Math.max(2, item.count / max * 88)}%">
+</div>
+      <span>${esc(item.date.slice(5))}</span>
+    </div>`).join('');
+  drawBars(document.querySelector('#attack-chart'), Object.entries(analytics.attackPatterns));
+}
+
+async function loadProvider() {
+  const provider = document.querySelector('#provider-select').value;
+  const data = await api(`/api/admin/providers/${encodeURIComponent(provider)}`);
+  document.querySelector('#provider-view').innerHTML = `
+    <div class="metrics">
+      <div class="card metric-card">
+<span>Reports naming ${esc(provider)}</span>
+<div class="metric">${data.reportCount}</div>
+</div>
+      <div class="card metric-card">
+<span>Reported numbers</span>
+<div class="metric">${data.reportedNumbers}</div>
+</div>
+      <div class="card metric-card">
+<span>High or critical</span>
+<div class="metric">${data.highRiskNumbers}</div>
+</div>
+      <div class="card metric-card">
+<span>Incidents</span>
+<div class="metric">${data.incidents.length}</div>
+</div>
+    </div>
+    <div class="grid2">
+      <div>
+<h3 class="detail">Attack patterns</h3>
+<div id="provider-patterns" class="bars">
+</div>
+</div>
+      <div>
+<h3 class="detail">Latest matching reports</h3>
+<div class="reports">
+        ${data.recentReports.length ? data.recentReports.slice(0, 5).map((report) => `
+          <div class="report">
+<strong>${esc(report.phoneNumber)} · ${pretty(report.attackType)}</strong>
+            <span class="muted">${esc(report.channel)} · ${new Date(report.createdAt).toLocaleString()}</span>
+          </div>`).join('') : '<span class="muted">No matching reports.</span>'}
+      </div>
+</div>
+    </div>`;
+  drawBars(document.querySelector('#provider-patterns'), Object.entries(data.attackPatterns));
+}
+
+async function loadHistory() {
+  const query = new URLSearchParams();
+  const phone = document.querySelector('#filter-phone').value.trim();
+  const provider = document.querySelector('#filter-provider').value;
+  const channel = document.querySelector('#filter-channel').value;
+  if (phone) query.set('phone', phone);
+  if (provider) query.set('provider', provider);
+  if (channel) query.set('channel', channel);
+  const data = await api(`/api/admin/reports?${query}`);
+  document.querySelector('#history-count').textContent = `Showing ${data.count} reports (up to ${data.limit})`;
+  document.querySelector('#history').innerHTML = data.reports.length
+    ? data.reports.map((report) => `
+        <tr>
+          <td>${report.createdAt ? new Date(report.createdAt).toLocaleString() : '—'}</td>
+          <td>${esc(report.phoneNumber)}</td>
+          <td>${esc(report.claimedProvider || 'Unknown')}</td>
+          <td>${pretty(report.attackType)}</td>
+          <td>${pretty(report.channel)}</td>
+          <td>${esc(report.description || '—')}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="6" class="muted">No reports match these filters.</td></tr>`;
+}
+
+async function loadAudit() {
+  const data = await api('/api/admin/audit');
+  document.querySelector('#audit-log').innerHTML = data.events.length
+    ? data.events.map((event) => `
+        <div class="audit-row">
+          <time class="muted">${event.createdAt ? new Date(event.createdAt).toLocaleString() : ''}</time>
+          <strong>${pretty(event.action)} · ${esc(event.actor)}</strong>
+          <span>${esc(event.targetType)} ${esc(event.targetId || '')} · ${esc(event.details || '')}</span>
+        </div>`).join('')
+    : '<span class="muted">No actions recorded yet.</span>';
+}
+
+async function loadNotifications() {
+  const data = await api('/api/admin/notifications');
+  document.querySelector('#notifications').innerHTML = data.notifications.length
+    ? data.notifications.map((notification) => `
+        <article class="report">
+          <div>
+<strong>${esc(notification.message)}</strong>
+            <div class="detail">${esc(notification.channel)} · to ${esc(notification.recipient)} · incident #${notification.incidentId}</div>
+          </div>
+          <time class="muted">${new Date(notification.createdAt).toLocaleString()}</time>
+        </article>`).join('')
+    : '<span class="muted">No in-app notifications recorded.</span>';
+}
+
+async function load() {
+  const metrics = document.querySelector('#metrics');
+  const incidentRows = document.querySelector('#incidents');
+  const recentReports = document.querySelector('#reports');
+  try {
+    const data = await api('/api/admin/dashboard');
+    const metricValues = [
+      ['Active incidents', data.activeIncidents],
+      ['Reports today', data.reportsToday],
+      ['High-risk numbers', data.highRiskNumbers],
+      ['Critical numbers', data.criticalNumbers],
+    ];
+    metrics.innerHTML = metricValues.map(([label, value]) => `
+      <div class="card metric-card">
+<span>${label}</span>
+<div class="metric">${value}</div>
+</div>`).join('');
+
+    incidentRows.innerHTML = data.incidents.length
+      ? data.incidents.map((incident) => {
+        const level = incident.riskScore >= 80 ? 'CRITICAL'
+          : incident.riskScore >= 60 ? 'HIGH' : 'SUSPICIOUS';
+        const statuses = ['OPEN', 'UNDER_INVESTIGATION', 'ESCALATED', 'RESOLVED', 'FALSE_POSITIVE'];
+        return `
+          <tr>
+            <td>
+<strong>${esc(incident.reference)}</strong>
+</td>
+            <td>${esc(incident.phoneNumber)}</td>
+            <td>
+<span class="pill ${level}">${incident.riskScore} · ${level}</span>
+</td>
+            <td>${incident.reportCount}</td>
+            <td>
+<select class="status-select" onchange="setStatus(${incident.id}, this.value)">
+              ${statuses.map((status) => `<option ${status === incident.status ? 'selected' : ''}>${status}</option>`).join('')}
+            </select>
+</td>
+            <td>
+              ${incident.status === 'ESCALATED'
+                ? '<span class="muted">In review queue</span>'
+                : `<button class="small-button" onclick="escalate(${incident.id})">Escalate</button>`}
+              <button class="small-button" onclick="notify(${incident.id})">Notify</button>
+            </td>
+          </tr>`;
+      }).join('')
+      : `<tr><td colspan="6" class="muted">No incidents yet.</td></tr>`;
+
+    recentReports.innerHTML = data.recentReports.length
+      ? data.recentReports.map((report) => `
+          <article class="report">
+            <div>
+<strong>${esc(report.phoneNumber)} · ${pretty(report.attackType)}</strong>
+              <div class="detail">Claimed ${esc(report.claimedProvider || 'unknown')} · ${esc(report.description || 'No description provided')} · ${pretty(report.channel)}</div>
+            </div>
+            <time class="muted">${new Date(report.createdAt).toLocaleString()}</time>
+          </article>`).join('')
+      : '<span class="muted">No reports yet.</span>';
+
+    await Promise.all([loadAnalytics(), loadProvider(), loadHistory(), loadAudit(), loadNotifications()]);
+  } catch (error) {
+    metrics.innerHTML = `<div class="error">Dashboard could not load: ${esc(error.message)}</div>`;
+    incidentRows.innerHTML = '<tr><td colspan="6" class="muted">Unavailable</td></tr>';
+    recentReports.innerHTML = '<span class="muted">Unavailable</span>';
+  }
+}
+
+async function escalate(id) {
+  try {
+    const result = await api(`/api/incidents/${id}/escalate`, { method: 'POST' });
+    alert(`Added to ${result.destination}\nReference: ${result.reference}`);
+    await Promise.all([load(), loadAudit()]);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function notify(id) {
+  const message = prompt('Notification message for the analyst team:');
+  if (!message) return;
+  try {
+    await api(`/api/incidents/${id}/notifications`, {
+      method: 'POST',
+      body: JSON.stringify({ channel: 'IN_APP', recipient: 'Security analysts', message }),
+    });
+    await Promise.all([loadNotifications(), loadAudit()]);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function setStatus(id, status) {
+  try {
+    await api(`/api/incidents/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+    await Promise.all([load(), loadAudit()]);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+document.querySelector('#filter-button').addEventListener('click', () => loadHistory().catch((error) => alert(error.message)));
+document.querySelector('#provider-select').addEventListener('change', () => loadProvider().catch((error) => alert(error.message)));
+document.querySelector('#refresh-audit').addEventListener('click', () => loadAudit().catch((error) => alert(error.message)));
 load();
 </script>
-</body></html>
+</body>
+</html>

@@ -70,7 +70,7 @@ The priority is **a complete, convincing vertical slice**, not maximum feature c
 - Risk scores
 - Recent reports
 - Incidents
-- Mock escalation
+- Internal provider-review escalation queue
 
 ---
 
@@ -81,10 +81,9 @@ Only implement these after the core MVP works:
 - report history;
 - charts;
 - attack-pattern grouping;
-- SMS scam reporting;
 - provider-specific dashboards;
 - more sophisticated risk scoring;
-- notification simulation;
+- in-app analyst notification records;
 - audit log viewer.
 
 ---
@@ -515,7 +514,7 @@ Incident history
 
 # 14. Phase 7 — Escalation
 
-For the hackathon, simulate the provider connection.
+Add the incident to ScamShield's persisted internal provider-review queue. This records the handoff for analyst follow-up; it does not contact a mobile operator.
 
 Example:
 
@@ -524,7 +523,7 @@ INCIDENT #SC-001
 
 Risk: CRITICAL
 
-[Escalate to Orange]
+[Escalate to review queue]
 ```
 
 After clicking:
@@ -533,18 +532,16 @@ After clicking:
 ESCALATED
 
 Destination:
-Orange Security Operations
+Internal provider review queue
 
 Reference:
-EXT-SC-001
+ESC-SC-001
 
 Status:
 QUEUED
 ```
 
-The backend can call a mock provider endpoint.
-
-This demonstrates the architecture without requiring real operator access.
+The queue record is stored with the incident for analyst follow-up. A future provider integration can deliver the queued escalation after operator access and credentials are configured.
 
 ---
 
@@ -1006,14 +1003,13 @@ Only attempt these after MVP completion.
 
 ### Priority 1
 
-- SMS scam reporting
 - campaign grouping
 - richer dashboard analytics
 
 ### Priority 2
 
 - provider-specific portal
-- notification simulation
+- in-app analyst notifications
 - better incident workflow
 
 ### Priority 3
