@@ -32,6 +32,42 @@ docker exec -u postgres scamshield-postgres psql -d postgres -c "ALTER USER scam
 ```
 
 Replace the example value with the exact `POSTGRES_PASSWORD` in `.env` (or `change-me-for-local-development` when using the defaults), then restart `mvn spring-boot:run`. If the database contains no data you need, `docker compose down -v` followed by `docker compose up -d postgres` recreates it with the current configured credentials.
+## Team ownership
+
+- Tetlanyo-dev: database, dashboard integration, and integration checks.
+- Thabang-Tsimakwane: backend contract, risk scoring, incidents, and safeguards.
+- loratopoliten: USSD simulator and final demo.
+- kaelowadingalo1-sys: dashboard shell and USSD API integration.
+- Vitore-dev: provider verification, reports, and incident UI.
+
+## API agreement
+
+- Local base URL: `http://localhost:8080`
+- JSON API prefix: `/api`
+- Normalize phone numbers to the agreed Botswana format before lookup or persistence.
+- Use uppercase `SCREAMING_SNAKE_CASE` enum values.
+- Return HTTP `400` validation errors as JSON with `timestamp`, `status`, `error`, `message`, and `path`.
+- Protect admin actions with authentication and return HTTP `401` or `403` when access is denied.
+
+Core endpoints:
+
+```text
+GET  /api/providers
+GET  /api/providers/{id}/official-numbers
+GET  /api/verification/{phoneNumber}
+POST /api/reports
+GET  /api/reports
+GET  /api/risk/{phoneNumber}
+GET  /api/incidents
+GET  /api/incidents/{id}
+POST /api/incidents/{id}/escalate
+```
+
+Reports use `phoneNumber`, `claimedProvider`, `attackType`, `occurredAt`, and an optional `description`. Responses include verification status, risk score, risk level, report count, and explainable reasons where applicable.
+
+## Branch and review workflow
+
+Develop each issue on its own `feature/issue-<number>-<short-name>` branch. Do not commit directly to `main`. Open a pull request after the issue acceptance checks pass, get at least one teammate review, and merge only after approval and a clean test run.
 
 ## Project layout
 
@@ -55,6 +91,6 @@ src/
 scripts/                  # developer and demo helper scripts
 ```
 
-Keep module internals inside their domain package. Add database changes as ordered Flyway migrations. Provider numbers in local seed/demo data must be clearly marked as mock until independently verified. Number reputation is a risk signal and does not prove who placed a call.
+Keep module internals inside their domain package. Add database changes as ordered Flyway migrations. Provider numbers in local seed/demo data must be clearly marked as mock until independently verified. Number reputation is a risk signal and does not prove who placed a call. Never request or store PINs, OTPs, passwords, or account credentials.
 
 The team workflow follows short-lived `feature/...` branches, small commits, and pull-request review. Owners are recorded in `GITHUB_ISSUES_PLAN.md`.
