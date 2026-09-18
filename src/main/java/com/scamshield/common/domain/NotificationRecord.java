@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "escalations")
-public class Escalation {
+@Table(name = "notification_simulations")
+public class NotificationRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   public Long id;
@@ -18,13 +18,18 @@ public class Escalation {
   @Column(name = "incident_id", nullable = false)
   public Long incidentId;
 
-  public String destination;
+  @Column(nullable = false)
+  public String channel;
 
-  @Column(name = "external_reference")
-  public String reference;
+  @Column(nullable = false)
+  public String recipient;
 
+  @Column(nullable = false, length = 500)
+  public String message;
+
+  @Column(nullable = false)
   public String status;
 
-  @Column(name = "created_at")
+  @Column(name = "created_at", nullable = false)
   public LocalDateTime createdAt;
 }

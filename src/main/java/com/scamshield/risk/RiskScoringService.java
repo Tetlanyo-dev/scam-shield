@@ -14,12 +14,13 @@ public class RiskScoringService {
     signals.stream().map(Signal::attack).filter(Objects::nonNull).map(String::toUpperCase)
       .filter(a -> Set.of("OTP","PIN","MONEY").contains(a)).forEach(behaviors::add);
     score += behaviors.size() * 25;
-    if (signals.stream().map(Signal::reporter).filter(Objects::nonNull).distinct().count() >= 2) score += 20;
+    boolean independentReports = signals.stream().map(Signal::reporter).filter(Objects::nonNull).distinct().count() >= 2;
+    if (independentReports) score += 20;
     score = Math.min(100, score);
     String level = score >= 80 ? "CRITICAL" : score >= 60 ? "HIGH" : score >= 30 ? "SUSPICIOUS" : "LOW";
     List<String> reasons = new ArrayList<>();
     if (!signals.isEmpty()) reasons.add("Report exists");
-    if (signals.size() >= 2) reasons.add("Multiple independent reports");
+    if (independentReports) reasons.add("Multiple independent reports");
     if (impersonation) reasons.add("Provider impersonation");
     behaviors.forEach(b -> reasons.add(b + " request"));
     return new Result(score, level, List.copyOf(reasons));
